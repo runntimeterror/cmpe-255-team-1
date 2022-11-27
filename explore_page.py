@@ -3,6 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import sklearn
 
+@st.cache
+def load_data():
+    df = pd.read_csv("data.csv")
+    return df
+df = load_data()
+
 def show_explore_page():
     st.title("Explore stuff")
 
