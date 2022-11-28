@@ -5,12 +5,20 @@ import matplotlib.pyplot as plt
 from data_cache import load_data
 import plotly.graph_objs as go
 from plotly.offline import init_notebook_mode, iplot
+import numpy as np
+import pydeck as pdk
 
 df = load_data()
 
 daily_sales = df.groupby('date', as_index=False)['bottles_sold'].sum()
 store_daily_sales = df.groupby(['vendor_name', 'date'], as_index=False)['bottles_sold'].sum()
 item_daily_sales = df.groupby(['item_number', 'date'], as_index=False)['bottles_sold'].sum()
+
+def point_to_geo(point):
+  split = point.split(' ')
+  long = float(split[0].replace('POINT(',''))
+  lat = float(split[1].replace(')', ''))
+  return pd.Series({'lat':lat, 'long':long})
 
 def show_explore_page():
     st.title("Data Exploration")
@@ -65,5 +73,45 @@ def show_explore_page():
     sales_by_category = df.groupby(['category_name']).agg({'bottles_sold':'sum'})
     sales_by_category = sales_by_category.sort_index(ascending=[True])
     st.bar_chart(sales_by_category, height=800)
+
+    st.write(
+        """
+    #### Geographical Distribution of Sale
+    """
+    )
+
+    sale_volume_by_stores = df.groupby('store_location', as_index=False)['sale_dollars'].sum()
+    result = sale_volume_by_stores['store_location'].apply(point_to_geo)
+    chart_data = sale_volume_by_stores.join(result)
+
+    st.pydeck_chart(pdk.Deck(
+        map_style=None,
+        initial_view_state=pdk.ViewState(
+            latitude=41.8780,
+            longitude=-93.0977,
+            zoom=8,
+            pitch=50,
+        ),
+        layers=[
+            pdk.Layer(
+            'HexagonLayer',
+            data=chart_data,
+            get_position=['long', 'lat'],
+            radius=1500,
+            elevation_scale=4,
+            elevation_range=[0, 1000],
+            pickable=True,
+            extruded=True,
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=chart_data,
+                get_position=['long', 'lat'],
+                get_color='[200, 30, 0, 160]',
+                get_radius=200,
+                get_elevation='sale_dollars'
+            ),
+        ],
+    ))
 
     
