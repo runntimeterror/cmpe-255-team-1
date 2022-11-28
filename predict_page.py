@@ -22,7 +22,7 @@ def show_predict_page():
     """
     )
 
-    days = st.slider("Predict", 0, 60, 30)
+    days = st.slider("Days into the future", 0, 60, 30)
     # Retrieve trained model
     pickled_model = pickle.load(open('pickles/overall_sales.sav', 'rb'))
     pickled_dp = pickle.load(open('pickles/overall_dp.sav', 'rb'))
