@@ -8,22 +8,9 @@ from plotly.offline import init_notebook_mode, iplot
 
 df = load_data()
 
-def date_features(df):
-    # Date Features
-    df['date'] = pd.to_datetime(df['date'])
-    df['year'] = df.date.dt.year
-    df['month'] = df.date.dt.month
-    df['day'] = df.date.dt.day
-    df['dayofyear'] = df.date.dt.dayofyear
-    df['dayofweek'] = df.date.dt.dayofweek
-    df['weekofyear'] = df.date.dt.isocalendar().week
-    
-    return df
-df_date_sales = date_features(df)
-
-daily_sales = df_date_sales.groupby('date', as_index=False)['bottles_sold'].sum()
-store_daily_sales = df_date_sales.groupby(['vendor_name', 'date'], as_index=False)['bottles_sold'].sum()
-item_daily_sales = df_date_sales.groupby(['item_number', 'date'], as_index=False)['bottles_sold'].sum()
+daily_sales = df.groupby('date', as_index=False)['bottles_sold'].sum()
+store_daily_sales = df.groupby(['vendor_name', 'date'], as_index=False)['bottles_sold'].sum()
+item_daily_sales = df.groupby(['item_number', 'date'], as_index=False)['bottles_sold'].sum()
 
 def show_explore_page():
     st.title("Data Exploration")
@@ -40,7 +27,7 @@ def show_explore_page():
 
     st.write("""#### Daily Sale Trends """)
     #daily sales by distribution center
-    data_grouped_day = df_date_sales.groupby(['dayofweek']).mean()['bottles_sold']
+    data_grouped_day = df.groupby(['dayofweek']).mean()['bottles_sold']
 
     fig, ax = plt.subplots()
     ax.plot(data_grouped_day)
