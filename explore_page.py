@@ -25,15 +25,21 @@ def show_explore_page():
 
     st.line_chart(data=daily_sales, x='date', y='bottles_sold')
 
+    with st.expander("See explanation"):
+        st.write("""
+            The chart above shows the average daily sales (bottles sold) across all stores.
+        """)
+
     st.write("""#### Daily Sale Trends """)
     #daily sales by distribution center
     data_grouped_day = df.groupby(['dayofweek']).mean()['bottles_sold']
-
+    labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     fig, ax = plt.subplots()
-    ax.plot(data_grouped_day)
+    ax.bar(labels, data_grouped_day, 0.35)
     
     st.pyplot(fig)
 
+    
 
     st.write(
         """
@@ -58,6 +64,6 @@ def show_explore_page():
     # Count all sales by category and plot
     sales_by_category = df.groupby(['category_name']).agg({'bottles_sold':'sum'})
     sales_by_category = sales_by_category.sort_index(ascending=[True])
-    st.bar_chart(sales_by_category)
+    st.bar_chart(sales_by_category, height=800)
 
     
