@@ -37,6 +37,10 @@ def show_explore_page():
         st.write("""
             The chart above shows the average daily sales (bottles sold) across all stores.
         """)
+        st.code("""
+        df = load_data()
+daily_sales = df.groupby('date', as_index=False)['bottles_sold'].sum()
+        """)
 
     st.write("""#### Daily Sale Trends """)
     #daily sales by distribution center
@@ -89,7 +93,7 @@ def show_explore_page():
         initial_view_state=pdk.ViewState(
             latitude=41.8780,
             longitude=-93.0977,
-            zoom=8,
+            zoom=7,
             pitch=50,
         ),
         layers=[
@@ -102,16 +106,40 @@ def show_explore_page():
             elevation_range=[0, 1000],
             pickable=True,
             extruded=True,
-            ),
-            pdk.Layer(
-                'ScatterplotLayer',
-                data=chart_data,
-                get_position=['long', 'lat'],
-                get_color='[200, 30, 0, 160]',
-                get_radius=200,
-                get_elevation='sale_dollars'
-            ),
+            )
         ],
     ))
+
+    with st.expander("See explanation"):
+        st.write("""
+            This uses the geographic coordinates of each store, and the sum of the total sale to plot.
+        """)
+        st.code("""
+        sale_volume_by_stores = df.groupby('store_location', as_index=False)['sale_dollars'].sum()
+result = sale_volume_by_stores['store_location'].apply(point_to_geo)
+chart_data = sale_volume_by_stores.join(result)
+
+st.pydeck_chart(pdk.Deck(
+    map_style=None,
+    initial_view_state=pdk.ViewState(
+        latitude=41.8780,
+        longitude=-93.0977,
+        zoom=7,
+        pitch=50,
+    ),
+    layers=[
+        pdk.Layer(
+        'HexagonLayer',
+        data=chart_data,
+        get_position=['long', 'lat'],
+        radius=1500,
+        elevation_scale=4,
+        elevation_range=[0, 1000],
+        pickable=True,
+        extruded=True,
+        )
+    ],
+))
+        """)
 
     
