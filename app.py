@@ -11,6 +11,8 @@ st.set_page_config(
 
 from predict_page import show_predict_page
 from explore_page import show_explore_page
+from algorithm_comparison_page import show_algorithm_comparison_page
+
 
 tab1, tab2, tab3 = st.tabs(["Explore & Analysis", "Algorithm Comparison", "Prediction"])
 
@@ -18,6 +20,7 @@ with tab1:
    show_explore_page()
 
 with tab2:
+   show_algorithm_comparison_page()
    st.header("A dog")
    st.image("https://static.streamlit.io/examples/dog.jpg", width=200)
 
