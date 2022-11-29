@@ -31,11 +31,10 @@ from statsmodels.tsa.deterministic import CalendarFourier, DeterministicProcess
 
 
 def algorithm_loop(X_train, X_test, y_train, y_test, X_lookahead):
-    names = ["NuSVR","SGDRegressor","Lars", "Lasso Lars", "Linear Regression"]
+    names = ["NuSVR","Lars", "Lasso Lars", "Linear Regression"]
 
     classifiers = [
     NuSVR(),
-    SGDRegressor(),
     Lars(),
     LassoLars(alpha=0.01),
     # xg.XGBRegressor(objective ='reg:linear',n_estimators = 10, seed = 123),
@@ -88,8 +87,6 @@ def predict_compare(split_date, length):
   before_oct = avg_sales[avg_sales.index < split_date]
   oct_forward = avg_sales[avg_sales.index >= split_date]
 
-  # print(oct_forward)
-
   y_train = before_oct["bottles_sold"]
   y_test = oct_forward["bottles_sold"]
   print("ytest_len", len(y_test))
@@ -129,14 +126,61 @@ def show_algorithm_comparison_page():
 
     st.write(
         """
-    ### Comparing Based on Hold Out
+    ### Comparing Based on Hold Out and Algorithm
+    ****Holdout Periods (Training on Data Up To...)****
+    1. 09/01/2022
+    2. 09/15/2022
+    3. 10/01/2022
+    4. 10/10/2022
+    ****Algorithms****
+    1. "NuSVR"
+    2. "Lars"
+    3. "Lasso Lars"
+    4. "Linear Regression"
+    #### Conclusions
+    Looking at the charts, the algorithm that makes the best predictions 
+    is either LARS, Lasso LARS, or Linear Regression.
+
+    With regards to the holdout data, the all three of the holdout periods
+    seem to perform similarly, where the model tends to avoid the outliers
+    and the predictions from the model does the same.
     """
     )
 
+    st.write(
+        """
+    #### Training Data: training with data up to 9/01/2022 
+        """
+    )
+
+
+    # with st.expander("See explanation"):
+    #     st.write("""
+    #         The chart above shows the average daily sales (bottles sold) across all stores.
+    #     """)
+
     #Overall daily sales
     predict_compare('09/01/2022', 60)
+
+    st.write(
+        """
+    #### Training Data: training with data up to 9/15/2022 
+        """
+    )
     predict_compare('09/15/2022', 46)
+    
+    st.write(
+        """
+    #### Training Data: training with data up to 10/01/2022 
+        """
+    )
     predict_compare('10/01/2022', 31)
+
+    st.write(
+        """
+    #### Training Data: training with data up to 10/10/2022 
+        """
+    )
     predict_compare('10/10/2022', 22)
 
 #     st.line_chart(data=daily_sales, x='date', y='bottles_sold')

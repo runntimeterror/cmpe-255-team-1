@@ -21,8 +21,6 @@ with tab1:
 
 with tab2:
    show_algorithm_comparison_page()
-   st.header("A dog")
-   st.image("https://static.streamlit.io/examples/dog.jpg", width=200)
 
 with tab3:
    show_predict_page()
