@@ -32,7 +32,7 @@ gabriel.chen@sjsu.edu
 
 
 ## Data Credit
-The state of Iowa has made their alcohol sales data public to analyze total spirits sales of individual products at the store level. This dataset, available in their department of commerce section in State of Iowa’s public data platform[2]. This has been uploaded to Google Big Query, under the public schema “bigquery-public-data.iowa_liquor_sales”
+The state of Iowa has made their alcohol sales data public to analyze total spirits sales of individual products at the store level. This dataset, available in their department of commerce section in [State of Iowa’s public data platform](https://data.iowa.gov/Sales-Distribution/Iowa-Liquor-Sales/m3tr-qhgy). This has been uploaded to Google Big Query, under the public schema “bigquery-public-data.iowa_liquor_sales”
 
 ## Abstract
 The purpose of this project is to build a web application for vendors, and distributors of liquor in the state of Iowa. The application would enable data exploration depicting sale trends, and geographical distribution of sale volume. It would also build prediction models for liquor sales in the future, allowing for the distributors, vendors to anticipate and manage inventory.
